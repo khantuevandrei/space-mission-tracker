@@ -1,0 +1,64 @@
+services:
+  app:
+    build: .
+    volumes:
+      - .:/var/www
+    depends_on:
+      - db
+      - redis
+      - mongodb
+      - rabbitmq
+    environment:
+      - DB_HOST=db
+      - REDIS_HOST=redis
+      - MONGODB_HOST=mongodb
+      - RABBITMQ_HOST=rabbitmq
+
+  webserver:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: spacetracker
+      POSTGRES_USER: spaceuser
+      POSTGRES_PASSWORD: spacepass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+
+  mongodb:
+    image: mongo:7
+    environment:
+      MONGO_INITDB_DATABASE: spacetracker
+    volumes:
+      - mongodata:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: spaceuser
+      RABBITMQ_DEFAULT_PASS: spacepass
+
+  influxdb:
+    image: influxdb:2.7
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdata:/var/lib/influxdb2
+
+volumes:
+  pgdata:
+  mongodata:
+  influxdata:
