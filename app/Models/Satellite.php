@@ -17,7 +17,8 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
     'altitude_km',
     'velocity_kms',
     'inclination',
-    'location',
+    'latitude',
+    'longitude',
     'last_tracked_at'
 ])]
 class Satellite extends Model

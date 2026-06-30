@@ -31,7 +31,8 @@ return new class extends Migration
             $table->decimal('velocity_kms', 8, 4)->nullable();
             $table->decimal('inclination', 6, 3)->nullable();
             // PostGIS: coordinates point (longtitude, latitude)
-            $table->point('location')->nullable();
+            $table->decimal('latitude', 10, 6)->nullable();
+            $table->decimal('longitude', 10, 6)->nullable();
             $table->timestamp('last_tracked_at')->nullable();
             $table->timestamps();
         });
