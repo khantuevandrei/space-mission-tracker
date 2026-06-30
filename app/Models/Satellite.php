@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Laravel\Scout\Searchable;
+use Override;
 
 #[Fillable([
     'name',
@@ -23,6 +25,20 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 ])]
 class Satellite extends Model
 {
+    use Searchable;
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'country' => $this->country,
+            'type' => $this->type,
+            'orbit_type' => $this->orbit_type,
+            'status' => $this->status,
+        ];
+    }
+
     public function missions()
     {
         return $this->hasMany(Mission::class);
